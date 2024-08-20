@@ -13,7 +13,7 @@ public class ShopApp {
         System.out.println("Welcome to Duke Choice Shop " + sa.firstName);
         Customer c1 = new Customer();
         c1.name="Pinky";
-        c1.measurement = 10;
+        c1.measurement = 1;
 
         switch (c1.measurement) {
             case 1: case 2: case 3 :
