@@ -1,6 +1,12 @@
 package duke.choice;
 
-import java.util.Arrays;
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.ServerConfiguration;
+import io.helidon.webserver.WebServer;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 
 public class ShopApp {
 
@@ -12,25 +18,18 @@ public class ShopApp {
         Clothing item2 = new Clothing("Orange t-shirt",10.5, "S");
         Clothing[] items = {item1,item2, new Clothing("Green Scarf",5.0,"S"), new Clothing("Blue T-shirt", 10.5, "S")};
         c1.addItems(items);
-        System.out.println("Customer is " + c1);
-        System.out.println("Items are " + Arrays.toString(items));
-        System.out.println("Total is " + c1.getTotalClothingCost());
 
-        int average =0;
-        int count=0;
-        for (Clothing item : c1.getItems() ) {
-            if (item.getSize().equals("L")) {
-                count++;
-                average += item.getPrice();
-            }
-        }
         try {
-            average = average / count;
-            System.out.printf("Average Price = " + average + ", Count = " + count);
+            ItemList list = new ItemList(items);
+            Routing routing = Routing.builder().get("/items", list).build();
+            ServerConfiguration config = ServerConfiguration.builder()
+                    .bindAddress(InetAddress.getLocalHost())
+                    .port(8889).build();
+            WebServer ws = WebServer.create(config,routing);
+            ws.start();
         }
-        catch (ArithmeticException ae) {
-            System.out.println("do not divide by 0");
+        catch (UnknownHostException uhe) {
+            uhe.printStackTrace();
         }
     }
-
 }
